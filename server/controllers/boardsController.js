@@ -11,6 +11,16 @@ const getBoards = (req, res, next) => {
     })
 };
 
+const getSingleBoard = (req, res, next) => {
+  Board.findById(req._id)
+    .then(board => {
+      res.json({ board })
+    })
+    .catch(err =>
+      next(new HttpError("Board cannot be found.", 500))
+    );
+};
+
 const createBoard = (req, res, next) => {
   const errors = validationResult(req);
   if (errors.isEmpty()) {
@@ -28,3 +38,4 @@ const createBoard = (req, res, next) => {
 
 exports.getBoards = getBoards;
 exports.createBoard = createBoard;
+exports.getSingleBoard = getSingleBoard;
