@@ -12,8 +12,8 @@ export default function lists(state = [], action) {
       }).flat();
     }
     case "CREATE_LIST_SUCCESS": {
-      const newList = action.list;
-      return state.concat(newlist);
+      const theList = action.list
+      return state.filter(list => list._id !== theList._id).concat(theList);
     }
     default:
       return state;

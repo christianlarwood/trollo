@@ -19,7 +19,7 @@ export default function cards(state = [], action) {
     }
     case "CREATE_LIST_SUCCESS": {
       const newCard = action.card;
-      return state.concat(newCard);
+      state.filter(card => card._id !== newCard._id).concat(newCard);
     }
     default:
       return state;

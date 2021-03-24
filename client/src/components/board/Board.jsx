@@ -1,14 +1,14 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
-import data from "../../data/BoardData";
+import { useParams } from "react-router-dom";
+// import data from "../../data/BoardData";
 import ListContainer from "./ListContainer";
 import * as actions from "../../actions/BoardActions";
 
 const Board = () => {
-  const href = useLocation().pathname.split("/");
-  const boardId = href[href.length - 1];
-
+  // board is populated
+  //  we need to change the reducers for fetching a single board/ list/card.
+  const {id: boardId} = useParams()
   const dispatch = useDispatch();
 
   const board = useSelector((state) => {
@@ -18,11 +18,24 @@ const Board = () => {
   });
 
   useEffect(() => {
-    dispatch(actions.fetchBoards());
+    dispatch(actions.fetchBoard(id));
   }, [dispatch]);
 
   return (
     <>
+      <header>
+        <ul>
+          <li id="title">{board.title}</li>
+          <li className="star-icon icon"></li>
+          <li className="private private-icon icon">Private</li>
+        </ul>
+        <div className="menu">
+          <i className="more-icon sm-icon"></i>Show Menu
+        </div>
+        <div className="subscribed">
+          <i className="sub-icon sm-icon"></i>Subscribed
+        </div>
+      </header>
       <main>
         <ListContainer boardId={boardId} />
       </main>
