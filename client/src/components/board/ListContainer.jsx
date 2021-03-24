@@ -1,10 +1,10 @@
 import React from 'react';
 import ExistingLists from './ExistingLists';
 
-const ListContainer = ({ lists }) => {
+const ListContainer = ({ boardId }) => {
   return (
     <div id="list-container" className="list-container">
-      <ExistingLists lists={lists} />
+      <ExistingLists boardId={boardId} />
       <div id="new-list" className="new-list">
         <span>Add a list...</span>
         <input type="text" placeholder="Add a list..." />

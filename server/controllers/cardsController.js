@@ -3,22 +3,22 @@ const HttpError = require("../models/httpError");
 const { validationResult } = require("express-validator");
 
 const getCards = (req, res, next) => {
-  Card.find({}, "title _id createdAt updatedAt labels position")
-    .then(cards => {
-      res.json({
-        cards,
-      })
-    })
+  Card.find(
+    {},
+    "title _id createdAt updatedAt labels position boardId listId"
+  ).then((cards) => {
+    res.json({
+      cards,
+    });
+  });
 };
 
 const getCard = (req, res, next) => {
   Card.findById(req.params.id)
-    .then(card => {
-      res.json({ card })
+    .then((card) => {
+      res.json({ card });
     })
-    .catch(err =>
-      next(new HttpError("Card cannot be found.", 500))
-    );
+    .catch((err) => next(new HttpError("Card cannot be found.", 500)));
 };
 
 const createCard = (req, res, next) => {
@@ -26,10 +26,13 @@ const createCard = (req, res, next) => {
   if (errors.isEmpty()) {
     Card.create(req.body)
       .then((card) => {
-        const cardId = card._id
-        Card.find({ _id: card._id }, "title _id listId boardId duedate createdAt updatedAt labels").then(card => res.json({ card }))
+        const cardId = card._id;
+        Card.find(
+          { _id: cardId },
+          "title _id listId boardId duedate createdAt updatedAt labels"
+        ).then((card) => res.json({ card }));
       })
-      .catch(err =>
+      .catch((err) =>
         next(new HttpError("Creating card failed, please try again", 500))
       );
   } else {
@@ -37,6 +40,6 @@ const createCard = (req, res, next) => {
   }
 };
 
-exports.createCard = createCard
+exports.createCard = createCard;
 exports.getCards = getCards;
 exports.getCard = getCard;

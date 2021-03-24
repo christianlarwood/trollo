@@ -1,44 +1,43 @@
 const Board = require("../models/board");
-const List = require("../models/list")
+const List = require("../models/list");
 const HttpError = require("../models/httpError");
 const { validationResult } = require("express-validator");
 
 const getBoards = (req, res, next) => {
-  Board.find({}, "title _id createdAt updatedAt")
-    .then(boards => {
-      res.json({
-        boards,
-      })
-    })
+  Board.find({}, "title _id createdAt updatedAt").then((boards) => {
+    res.json({
+      boards,
+    });
+  });
 };
 
 const getBoard = (req, res, next) => {
-  Board.findById(req.params.id).populate({
-    path: "lists",
-    populate: {
-      path: "cards"
-    },
-  })
-    .then(board => {
-      res.json({ board })
+  Board.findById(req.params.id)
+    .populate({
+      path: "lists",
+      populate: {
+        path: "cards",
+      },
     })
-    .catch(err =>
-      next(new HttpError("Board cannot be found.", 500))
-    );
+    .then((board) => {
+      res.json({ board });
+    })
+    .catch((err) => next(new HttpError("Board cannot be found.", 500)));
 };
 
 const createBoard = (req, res, next) => {
   const errors = validationResult(req);
   if (errors.isEmpty()) {
-    const {title, lists} = req.body
-
-    Board.create({title})
+    Board.create(req.body)
       .then((board) => {
-        const boardId = board._id
+        const boardId = board._id;
         // if (!lists) return Board.findById(board._id)
-        Board.find({ _id: board._id }, "title _id createdAt updatedAt").then(board => res.json({ board }))
+        Board.find(
+          { _id: board._id },
+          "title _id createdAt updatedAt"
+        ).then((board) => res.json({ board }));
       })
-      .catch(err =>
+      .catch((err) =>
         next(new HttpError("Creating board failed, please try again", 500))
       );
   } else {
@@ -71,13 +70,13 @@ const createBoard = (req, res, next) => {
 //       const board = await Board.create({ title })
 //       const boardId = board._id
 //       if (!lists) return board;
-    
+
 //       lists.forEach(async list => {
 //         await createList(boardId, list)
 //       })
 //     } catch (error) {
 //       next(new HttpError("Creating board failed, please try again", 500))
-      
+
 //     }
 //   }
 // }

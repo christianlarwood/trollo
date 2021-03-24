@@ -1,19 +1,30 @@
 import React, { useEffect } from "react";
-import data from '../../data/BoardData';
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
+import data from "../../data/BoardData";
 import ListContainer from "./ListContainer";
+import * as actions from "../../actions/BoardActions";
 
+const Board = () => {
+  const href = useLocation().pathname.split("/");
+  const boardId = href[href.length - 1];
 
-const Board = (props) => {
-  const board = data
+  const dispatch = useDispatch();
+
+  const board = useSelector((state) => {
+    return state.boards.find((board) => {
+      return board._id === boardId;
+    });
+  });
 
   useEffect(() => {
+    dispatch(actions.fetchBoards());
+  }, [dispatch]);
 
-  }, [])
-  console.log(board);
   return (
     <>
       <main>
-        <ListContainer lists={board.lists}/>
+        <ListContainer boardId={boardId} />
       </main>
       <div className="menu-sidebar">
         <div id="menu-main" className="main slide">
@@ -39,11 +50,17 @@ const Board = (props) => {
             <ul className="menu-list">
               <li className="background-item">Change Background</li>
               <li className="filter-icon menu-icon">Filter Cards</li>
-              <li className="power-icon menu-icon not-implemented">Power-Ups</li>
-              <li className="stickers-icon menu-icon not-implemented">Stickers</li>
+              <li className="power-icon menu-icon not-implemented">
+                Power-Ups
+              </li>
+              <li className="stickers-icon menu-icon not-implemented">
+                Stickers
+              </li>
               <li className="more-icon menu-icon">More</li>
               <hr />
-              <li className="activity-icon menu-icon not-implemented">Activity</li>
+              <li className="activity-icon menu-icon not-implemented">
+                Activity
+              </li>
             </ul>
             <ul className="activity-list">
               <li>
