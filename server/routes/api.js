@@ -19,7 +19,7 @@ router.get("/lists", listsController.getLists);
 
 router.get("/lists/:id", listsController.getList);
 
-router.post("/lists", listsController.createList);
+router.post("/lists", listsController.createList, boardsController.addListToBoard, listsController.sendList);
 
 router.get("/cards", cardsController.getCards);
 

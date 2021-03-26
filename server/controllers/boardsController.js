@@ -40,13 +40,16 @@ const createBoard = (req, res, next) => {
   }
 };
 
-// const addListToBoard = (req, res, next) => {
-//   Board.findByIdAndUpdate(req.body.boardId)
-// }
-
-// adding list to the board
-
+const addListToBoard = (req, res, next) => { // also has req.list
+  Board.findByIdAndUpdate(req.body.boardId, { '$addToSet': { lists: req.list._id } })
+    .then(updatedBoard => {
+      next();
+    })
+  next()
+}
+// { '$addToSet': { <field1>: <value1>, ... } }
 
 exports.getBoards = getBoards;
 exports.createBoard = createBoard;
 exports.getBoard = getBoard;
+exports.addListToBoard = addListToBoard;

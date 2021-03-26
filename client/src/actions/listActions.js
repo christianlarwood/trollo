@@ -20,7 +20,7 @@ export function createListRequest() {
 
 export function createListSuccess(list) {
 
-  return { type: types.CREATE_LIST_SUCCESS, list: list };
+  return { type: types.CREATE_LIST_SUCCESS, list };
 }
 
 export function fetchLists() {
@@ -40,6 +40,7 @@ export function fetchList(id) {
   };
 }
 export function createList(list, callback) {
+
   return function (dispatch) {
     dispatch(createListRequest());
     apiClient.createList(list, (data) => {

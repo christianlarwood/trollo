@@ -20,16 +20,21 @@ const getList = (req, res, next) => {
     .catch((err) => next(new HttpError("List cannot be found.", 500)));
 };
 
+const sendList = (req, res, next) => {
+  if (req.list) {
+    res.json(req.list)
+  } else {
+    next()
+  }
+}
 const createList = (req, res, next) => {
   const errors = validationResult(req);
   if (errors.isEmpty()) {
     List.create(req.body)
-      .then((list) => {
-        const listId = list._id;
-        List.find(
-          { _id: list._id },
-          "title _id createdAt updatedAt cards boardId"
-        ).then((list) => res.json({ list }));
+      .then((newList) => {
+        const { cards, ...list } = newList
+        req.list = list
+        next()
       })
       .catch((err) =>
         next(new HttpError("Creating list failed, please try again", 500))
@@ -42,3 +47,4 @@ const createList = (req, res, next) => {
 exports.createList = createList;
 exports.getLists = getLists;
 exports.getList = getList;
+exports.sendList = sendList;

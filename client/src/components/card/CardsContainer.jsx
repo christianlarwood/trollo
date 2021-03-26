@@ -7,7 +7,7 @@ const CardsContainer = ({ listId }) => {
   
   return (
     <div id="cards-container" data-id="list-1-cards">
-      {cards.map(card => <CardSummary key={card._id} cardId={card._id} />)};
+      {cards.map(card => <CardSummary key={card._id} cardId={card._id} />)}
     </div>
   )
 }

@@ -9,7 +9,7 @@ const ExistingLists = ({ boardId }) => {
 
   return (
     <div id="existing-lists" className="existing-lists">
-      {lists.map((list) => <List key={list._id} listId={list._id} />)};
+      {lists.map((list) => <List key={list._id} listId={list._id} />)}
     </div>
   )
 }

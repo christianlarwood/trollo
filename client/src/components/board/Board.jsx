@@ -18,35 +18,7 @@ const Board = () => {
     });
   });
     
-  const reducer = (prevState, updatedProperty) => ({
-    ...prevState,
-    ...updatedProperty,
-  });
 
-  const initState = {
-    popover: {
-      visible: false,
-      attachedTo: null,
-      type: null,
-    },
-  };
-
-  const [state, setState] = useReducer(reducer, initState);
-
-  const handleNewListClick = (e) => {
-    setState({
-      popover: {
-        visible: true,
-        attachedTo: e.currentTarget,
-        type: "new-list",
-      },
-    });
-  };
-
-  const handleClosePopoverClick = (e) => {
-    e.preventDefault();
-    setState(initState);
-  };
 
 
   useEffect(() => {
@@ -73,10 +45,8 @@ const Board = () => {
       <main>
         <div id="list-container" className="list-container">
           <ExistingLists boardId={boardId} />
-          <NewList boardId={boardId}  onNewListClick={handleNewListClick}/>
-          <Popover {...state.popover} coverTarget={true}>
-            <NewListForm onCloseClick={handleClosePopoverClick} />
-          </Popover>
+          <NewList boardId={boardId} />
+    
       </div>
       </main>
       <div className="menu-sidebar">
