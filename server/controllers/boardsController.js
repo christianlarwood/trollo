@@ -45,7 +45,6 @@ const addListToBoard = (req, res, next) => { // also has req.list
     .then(updatedBoard => {
       next();
     })
-  next()
 }
 // { '$addToSet': { <field1>: <value1>, ... } }
 

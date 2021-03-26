@@ -46,7 +46,6 @@ const Board = () => {
         <div id="list-container" className="list-container">
           <ExistingLists boardId={boardId} />
           <NewList boardId={boardId} />
-    
       </div>
       </main>
       <div className="menu-sidebar">

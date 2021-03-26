@@ -21,8 +21,9 @@ const getList = (req, res, next) => {
 };
 
 const sendList = (req, res, next) => {
-  if (req.list) {
-    res.json(req.list)
+  const list = req.list
+  if (list) {
+    res.json({list})
   } else {
     next()
   }
@@ -30,10 +31,12 @@ const sendList = (req, res, next) => {
 const createList = (req, res, next) => {
   const errors = validationResult(req);
   if (errors.isEmpty()) {
+    // const {boardId, list} = req.body 
+    // {boardId, cards: [], ...list}
+    console.log(req.body)
     List.create(req.body)
       .then((newList) => {
-        const { cards, ...list } = newList
-        req.list = list
+        req.list = newList
         next()
       })
       .catch((err) =>
@@ -44,7 +47,23 @@ const createList = (req, res, next) => {
   }
 };
 
+const updateList = (req, res, next) => {
+  const errors = validationResult(req);
+  if (errors.isEmpty()) {
+    // console.log(req.body);
+    
+    List.findByIdAndUpdate(req.body._id, { title: req.body.title })
+    .then(updatedList => {
+      res.json(updatedList);
+    } ,
+        { new: true })
+  } else {
+    return next(new HttpError("The input field is empty.", 404));
+  }
+};
+
 exports.createList = createList;
 exports.getLists = getLists;
 exports.getList = getList;
 exports.sendList = sendList;
+exports.updateList = updateList;

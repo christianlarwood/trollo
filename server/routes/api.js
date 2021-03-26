@@ -19,6 +19,8 @@ router.get("/lists", listsController.getLists);
 
 router.get("/lists/:id", listsController.getList);
 
+router.put("/lists/:id", listsController.updateList);
+
 router.post("/lists", listsController.createList, boardsController.addListToBoard, listsController.sendList);
 
 router.get("/cards", cardsController.getCards);

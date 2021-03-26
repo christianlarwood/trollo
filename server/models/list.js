@@ -11,8 +11,7 @@ const ListSchema = new Schema({
     ref: "Board"
   },
   position: {
-    type: Number,
-    required: true
+    type: Number
   },
   cards: [{
     type: ObjectId,
