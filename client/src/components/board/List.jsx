@@ -1,16 +1,16 @@
 import React from 'react';
 import CardsContainer from '../card/CardsContainer';
+import { useSelector } from 'react-redux';
 
-const List = ({ info }) => {
-  const { title, cards, boardId } = info;
-  console.log("info", info);
+const List = ({ listId }) => {
+  const list = useSelector(state => state.lists).find(list => list._id === listId)
   return (
     <div className="list-wrapper">
       `<div className="list-background">
         <div className="list">
           <a className="more-icon sm-icon" href=""></a>
           <div>
-            <p className="list-title">{title}</p>
+            <p className="list-title">{list.title}</p>
           </div>
           <div className="add-dropdown add-top">
             <div className="card"></div>
@@ -20,7 +20,7 @@ const List = ({ info }) => {
               <span>...</span>
             </div>
           </div>
-          <CardsContainer cards={cards} />
+          <CardsContainer listId={listId} />
           <div className="add-dropdown add-bottom">
             <div className="card">
               <div className="card-info"></div>

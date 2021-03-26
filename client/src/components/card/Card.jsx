@@ -1,6 +1,9 @@
 import React from "react";
+import { useSelector } from 'react-redux';
 
-const Card = () => {
+const Card = ({cardId}) => {
+  const card = useSelector(state => state.cards).find((card) => card._id === cardId);
+  console.log(card)
   return (
     <div id="modal-container">
       <div className="screen"></div>

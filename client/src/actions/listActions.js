@@ -1,40 +1,53 @@
-// import apiClient from "../lib/ApiClient";
-// import * as types from "../constants/ActionTypes";
+import apiClient from "../lib/ApiClient";
+import * as types from "../constants/ActionTypes";
 
-// // action creator that returns an object with the new data that dispatch will use to update state in Redux
-// export function fetchBoardsRequest() {
-//   return { type: types.FETCH_BOARDS_REQUEST };
+// action creator that returns an object with the new data that dispatch will use to update state in Redux
+export function fetchListRequest() {
+  return { type: types.FETCH_LIST_REQUEST };
+}
+
+export function fetchListSuccess(list) {
+  return { type: types.FETCH_LIST_SUCCESS, list };
+}
+
+// export function listFetched(list) {
+//   return { type: types.LIST_FETCHED, list };
 // }
 
-// export function fetchBoardsSuccess(boards) {
-//   return { type: types.FETCH_BOARDS_SUCCESS, boards };
-// }
+export function createListRequest() {
+  return { type: types.CREATE_LIST_REQUEST };
+}
 
-// export function createBoardRequest() {
-//   return { type: types.CREATE_BOARD_REQUEST };
-// }
+export function createListSuccess(list) {
 
-// export function createBoardSuccess(board) {
+  return { type: types.CREATE_LIST_SUCCESS, list: list };
+}
 
-//   return { type: types.CREATE_BOARD_SUCCESS, board: board };
-// }
+export function fetchLists() {
+  return function (dispatch) {
+    dispatch(fetchListRequest()); // defaults the state
+    apiClient.getLists((data) => dispatch(fetchListSuccess(data.lists)));
+  };
+}
 
-// export function fetchBoards() {
-//   return function (dispatch) {
-//     dispatch(fetchBoardsRequest()); // defaults the state
-//     apiClient.getBoards((data) => dispatch(fetchBoardsSuccess(data.boards)));
-//   };
-// }
+export function fetchList(id) {
+  return function (dispatch) {
+    dispatch(fetchListRequest()); // defaults the state
+    apiClient.getList(id, (data) => {
+      dispatch(listFetched(data.list))
+    
+    });
+  };
+}
+export function createList(list, callback) {
+  return function (dispatch) {
+    dispatch(createListRequest());
+    apiClient.createList(list, (data) => {
+      dispatch(createListSuccess(data.list));
 
-// export function createBoard(board, callback) {
-//   return function (dispatch) {
-//     dispatch(createBoardRequest());
-//     apiClient.createBoard(board, (data) => {
-//       dispatch(createBoardSuccess(data.board));
-
-//       if (callback) {
-//         callback(data.board);
-//       }
-//     });
-//   };
-// }
+      if (callback) {
+        callback(data.list);
+      }
+    });
+  };
+}

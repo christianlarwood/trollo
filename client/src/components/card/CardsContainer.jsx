@@ -1,12 +1,13 @@
 import React from 'react';
 import CardSummary from './CardSummary';
+import { useSelector } from 'react-redux';
 
-const CardsContainer = ({ data }) => {
-  console.log(data);
+const CardsContainer = ({ listId }) => {
+  const cards = useSelector(state => state.cards).filter((card) => card.listId === listId);
+  
   return (
     <div id="cards-container" data-id="list-1-cards">
-      {/* <CardSummary key={data._id} data={data} />
-      {data.map(card => <CardSummary key={card._id} data={card} />)}; */}
+      {cards.map(card => <CardSummary key={card._id} cardId={card._id} />)};
     </div>
   )
 }

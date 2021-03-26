@@ -1,26 +1,60 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useReducer } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-// import data from "../../data/BoardData";
-import ListContainer from "./ListContainer";
 import * as actions from "../../actions/BoardActions";
+import ExistingLists from './ExistingLists';
+import NewList from './NewList';
+import NewListForm from './NewListForm';
+import Popover from '../shared/Popover';
 
 const Board = () => {
   // board is populated
-  //  we need to change the reducers for fetching a single board/ list/card.
+  //  board.title is undefined
   const {id: boardId} = useParams()
   const dispatch = useDispatch();
-
   const board = useSelector((state) => {
     return state.boards.find((board) => {
       return board._id === boardId;
     });
   });
+    
+  const reducer = (prevState, updatedProperty) => ({
+    ...prevState,
+    ...updatedProperty,
+  });
+
+  const initState = {
+    popover: {
+      visible: false,
+      attachedTo: null,
+      type: null,
+    },
+  };
+
+  const [state, setState] = useReducer(reducer, initState);
+
+  const handleNewListClick = (e) => {
+    setState({
+      popover: {
+        visible: true,
+        attachedTo: e.currentTarget,
+        type: "new-list",
+      },
+    });
+  };
+
+  const handleClosePopoverClick = (e) => {
+    e.preventDefault();
+    setState(initState);
+  };
+
 
   useEffect(() => {
-    dispatch(actions.fetchBoard(id));
-  }, [dispatch]);
-
+    dispatch(actions.fetchBoard(boardId));
+  }, [dispatch, boardId]);
+  
+  if (!board) return (<div>no board</div>);
+  
   return (
     <>
       <header>
@@ -37,7 +71,13 @@ const Board = () => {
         </div>
       </header>
       <main>
-        <ListContainer boardId={boardId} />
+        <div id="list-container" className="list-container">
+          <ExistingLists boardId={boardId} />
+          <NewList boardId={boardId}  onNewListClick={handleNewListClick}/>
+          <Popover {...state.popover} coverTarget={true}>
+            <NewListForm onCloseClick={handleClosePopoverClick} />
+          </Popover>
+      </div>
       </main>
       <div className="menu-sidebar">
         <div id="menu-main" className="main slide">

@@ -1,24 +1,15 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import List from './List';
-
-import { useSelector, useDispatch } from 'react-redux';
-import { fetchBoards } from '../../actions/BoardActions';
+import { useSelector } from 'react-redux';
 
 const ExistingLists = ({ boardId }) => {
-  const dispatch = useDispatch()
-  console.log(boardId)
   const lists = useSelector((state) => state.lists).filter(
     (list) => list.boardId === boardId
   );
-  console.log(lists);
 
-  useEffect(() => {
-    dispatch(fetchBoards())
-  }, [dispatch]) 
-  
   return (
     <div id="existing-lists" className="existing-lists">
-      {lists && lists.map((list) => <List key={list._id} info={list} />)};
+      {lists.map((list) => <List key={list._id} listId={list._id} />)};
     </div>
   )
 }

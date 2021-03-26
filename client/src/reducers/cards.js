@@ -3,23 +3,19 @@ export default function cards(state = [], action) {
     case "FETCH_LISTS_SUCCESS": {
       return action.lists;
     }
-    case "BOARDS_FETCHED": {
-      return action.boards.map(board => {
-        const { lists } = board
-        let result = [];
-        if (lists) {
-          for (let i = 0; i < lists.length; i++) {
-            const { cards } = lists[i];
-            if (cards !== undefined) result.push(cards)
-          }
-        }
-        
-        return result;
-      }).flat();
+    case "BOARD_FETCHED": {
+        let { lists } = action.board;
+        const newCards = lists.reduce((acc, list) => {
+          const { cards } = list;
+          return acc.concat(cards);
+        }, [])
+
+        return state.filter(card => {
+          card.boardId !== action.board._id
+        }).concat(newCards)
     }
-    case "CREATE_LIST_SUCCESS": {
-      const newCard = action.card;
-      state.filter(card => card._id !== newCard._id).concat(newCard);
+    case "CREATE_CARD_SUCCESS": {
+      return state.concat(action.card);
     }
     default:
       return state;

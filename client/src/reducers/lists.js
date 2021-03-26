@@ -1,19 +1,18 @@
 export default function lists(state = [], action) {
   switch (action.type) {
-    case "BOARDS_FETCHED": {
-      return action.boards.map(board => {
-        let { lists } = board;
-        if (!lists) {
-          return [];
-        }
-        return lists.map(list => {
-          return {...list, cards: undefined};
-        })
-      }).flat();
+    case "BOARD_FETCHED": {
+        let { lists } = action.board;
+        const newLists = lists.reduce((acc, list) => {
+          const { cards, ...listWithoutCards } = list
+          return acc.concat(listWithoutCards)
+        }, []);
+
+        return state.filter(list => {
+          list.boardId !== action.board._id
+        }).concat(newLists)
     }
     case "CREATE_LIST_SUCCESS": {
-      const theList = action.list
-      return state.filter(list => list._id !== theList._id).concat(theList);
+      return state.concat(action.list)
     }
     default:
       return state;
