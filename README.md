@@ -1,4 +1,4 @@
-# Reaction App
+# Trollo App
 
 ## Setup
 1. Install [Node.js](https://nodejs.org/en/download/package-manager/) if you haven't already
