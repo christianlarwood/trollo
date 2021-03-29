@@ -5,6 +5,7 @@ import * as actions from "../../actions/BoardActions";
 import CreateBoardTile from "./CreateBoardTile";
 
 const BoardsDashboard = (props) => {
+  // extracts state from store
   const boards = useSelector((state) => state.boards);
 
   const boardTiles = boards.map((board) => {
@@ -13,9 +14,10 @@ const BoardsDashboard = (props) => {
 
   const dispatch = useDispatch();
 
+  // get all boards
   useEffect(() => {
     dispatch(actions.fetchBoards());
-  }, [dispatch]);
+  }, [dispatch]); // we're calling dispatch inside so we need to pass as as dependency
 
   return (
     <main className="dashboard">

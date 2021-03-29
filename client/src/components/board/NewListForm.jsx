@@ -1,16 +1,15 @@
 import React, { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import useInput from "../../hooks/useInput";
-import * as actions from "../../actions/BoardActions";
+import * as actions from "../../actions/ListActions";
 
-const NewBoardForm = (props) => {
-  const { value: title, bid: bindTitle } = useInput("");
+const NewListForm = (props) => {
+  const { value: title, bind: bindTitle } = useInput("");
 
   const dispatch = useDispatch();
 
-  const createBoard = useCallback(
-    (newBoard, callback) => {
-      dispatch(actions.createBoard(newBoard, callback));
+  const createList = useCallback((newList, callback) => {
+      dispatch(actions.createList(newList, callback));
     },
     [dispatch]
   );
@@ -20,16 +19,16 @@ const NewBoardForm = (props) => {
       e.preventDefault();
       e.stopPropagation();
 
-      const newBoard = { title };
-      createBoard(newBoard, props.onCloseClick(new Event("click")));
+      const newList = { title };
+      createList(newList, props.onCloseClick(new Event("click")));
     },
-    [createBoard, props, title]
+    [createList, props, title]
   );
 
   return (
     <div>
       <header>
-        <span>Create Board</span>
+        <span>Create List</span>
         <a
           href="#"
           className="icon-sm icon-close"
@@ -43,7 +42,7 @@ const NewBoardForm = (props) => {
             <dd>
               <input
                 type="text"
-                placeholder='Like "Publishing Calendar"...'
+                placeholder='Like "Things to do"...'
                 value={title}
                 {...bindTitle}
               />
@@ -58,4 +57,4 @@ const NewBoardForm = (props) => {
   );
 };
 
-export default NewBoardForm;
+export default NewListForm;
