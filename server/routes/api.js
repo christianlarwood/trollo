@@ -27,6 +27,6 @@ router.get("/cards", cardsController.getCards);
 
 router.get("/cards/:id", cardsController.getCard);
 
-router.post("/cards", cardsController.createCard);
+router.post("/cards", validateCard, cardsController.createCard);
 
 module.exports = router;

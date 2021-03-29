@@ -4,7 +4,7 @@ const {ObjectId} = Schema.Types;
 const CardSchema = new Schema({
   title: {
     type: String,
-    required: [true, 'The Board title is required']
+    required: [true, 'The Card\'s title is required']
   },
   boardId: {
     type: ObjectId,
@@ -19,8 +19,15 @@ const CardSchema = new Schema({
   labels: [String],
   position: {
     type: Number,
-    required: true
-  }
+    required: [true, "Card Position is required"],
+    default: 65535.0
+  },
+  comments: [
+    {
+      type: ObjectId,
+      ref: 'Card'
+    }
+  ]
   },
   { timestamps: true }
 )

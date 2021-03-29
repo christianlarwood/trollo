@@ -4,7 +4,7 @@ import useInput from "../../hooks/useInput";
 import * as actions from "../../actions/BoardActions";
 
 const NewBoardForm = (props) => {
-  const { value: title, bid: bindTitle } = useInput("");
+  const { value: title, bind: bindTitle } = useInput("");
 
   const dispatch = useDispatch();
 

@@ -1,4 +1,5 @@
 const Card = require("../models/card");
+const List = require("../models/list");
 const HttpError = require("../models/httpError");
 const { validationResult } = require("express-validator");
 
@@ -23,20 +24,19 @@ const getCard = (req, res, next) => {
 
 const createCard = (req, res, next) => {
   const errors = validationResult(req);
+  console.log(req.body.card);
   if (errors.isEmpty()) {
     Card.create(req.body)
       .then((card) => {
-        const cardId = card._id;
-        Card.find(
-          { _id: cardId },
-          "title _id listId boardId duedate createdAt updatedAt labels"
-        ).then((card) => res.json({ card }));
+        List.findByIdAndUpdate(req.body.listId, { $push: { cards: card}})
+        .then(() => res.json({ card }))
+        .catch(new HttpError("Card created, but not added to list", 500));
       })
       .catch((err) =>
-        next(new HttpError("Creating card failed, please try again", 500))
+        next(new HttpError(`${err}`, 500))
       );
   } else {
-    return next(new HttpError("The input field is empty.", 404));
+    return next(new HttpError("Card has no title.", 404));
   }
 };
 

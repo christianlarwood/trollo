@@ -31,10 +31,10 @@ const sendList = (req, res, next) => {
 const createList = (req, res, next) => {
   const errors = validationResult(req);
   if (errors.isEmpty()) {
-    // const {boardId, list} = req.body 
+    // const {boardId, list} = req.body
     // {boardId, cards: [], ...list}
-    console.log(req.body)
-    List.create(req.body)
+
+    List.create(req.body.card)
       .then((newList) => {
         req.list = newList
         next()
@@ -51,8 +51,8 @@ const updateList = (req, res, next) => {
   const errors = validationResult(req);
   if (errors.isEmpty()) {
     // console.log(req.body);
-    
-    List.findByIdAndUpdate(req.body._id, { title: req.body.title })
+
+    List.findByIdAndUpdate(req.body._id, { title: req.body.title }, { new: true })
     .then(updatedList => {
       res.json(updatedList);
     } ,

@@ -7,26 +7,31 @@ import NewList from './NewList';
 import NewListForm from './NewListForm';
 import Popover from '../shared/Popover';
 
-const Board = () => {
-  // board is populated
-  //  board.title is undefined
-  const {id: boardId} = useParams()
+const Board = (props) => {
+  const boardId = (() => {
+    let someId = useParams().id;
+
+    // if ()
+    return someId;
+  })();
   const dispatch = useDispatch();
   const board = useSelector((state) => {
     return state.boards.find((board) => {
       return board._id === boardId;
     });
   });
-    
+
 
 
 
   useEffect(() => {
+    if (!boardId) return;
+
     dispatch(actions.fetchBoard(boardId));
   }, [dispatch, boardId]);
-  
+
   if (!board) return (<div>no board</div>);
-  
+
   return (
     <>
       <header>

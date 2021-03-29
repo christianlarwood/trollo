@@ -35,7 +35,7 @@ export function fetchCard(id) {
     dispatch(fetchCardRequest()); // defaults the state
     apiClient.getCard(id, (data) => {
       dispatch(cardFetched(data.card))
-    
+
     });
   };
 }

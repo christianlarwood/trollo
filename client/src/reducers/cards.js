@@ -6,13 +6,13 @@ export default function cards(state = [], action) {
     case "BOARD_FETCHED": {
         let { lists } = action.board;
         const newCards = lists.reduce((acc, list) => {
-          const { cards } = list;
-          return acc.concat(cards);
+          return acc.concat(list.cards);
         }, [])
-
-        return state.filter(card => {
-          card.boardId !== action.board._id
-        }).concat(newCards)
+        console.log(newCards);
+        return newCards;
+        // return state.filter(card => {
+        //   card.boardId !== action.board._id
+        // }).concat(newCards)
     }
     case "CREATE_CARD_SUCCESS": {
       return state.concat(action.card);

@@ -4,9 +4,12 @@ import { useSelector } from 'react-redux';
 const CardSummary = ({cardId}) => {
   const card = useSelector(state => state.cards).find((card) => card._id === cardId);
 
+  const showCard = () => {
+    window.location.href = `/cards/${cardId}`;
+  }
   return (
       <div className="card-background">
-        <div className="card ">
+        <div className="card " onClick={showCard}>
           <i className="edit-toggle edit-icon sm-icon"></i>
           <div className="card-info">
             {card.labels.map(label => {
