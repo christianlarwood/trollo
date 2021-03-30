@@ -70,12 +70,19 @@ const apiClient = {
       .catch(logError);
   },
   createCard: function (card, callback) {
-  return axios
-    .post(routes.CREATE_CARD_URL, card)
-    .then(unwrapData)
-    .then(callback)
-    .catch(logError);
+    return axios
+      .post(routes.CREATE_CARD_URL, card)
+      .then(unwrapData)
+      .then(callback)
+      .catch(logError);
   },
+  createComment: function (comment, callback) {
+    return axios
+      .post(routes.CREATE_COMMENT_URL, comment)
+      .then(unwrapData)
+      .then(callback)
+      .catch(logError);
+  }
 };
 
 export default apiClient;

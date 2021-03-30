@@ -26,7 +26,7 @@ const createCard = (req, res, next) => {
   const errors = validationResult(req);
   console.log(req.body.card);
   if (errors.isEmpty()) {
-    Card.create(req.body)
+    Card.create(req.body.card)
       .then((card) => {
         List.findByIdAndUpdate(req.body.listId, { $push: { cards: card}})
         .then(() => res.json({ card }))

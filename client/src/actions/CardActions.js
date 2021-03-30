@@ -23,6 +23,38 @@ export function createCardSuccess(card) {
   return { type: types.CREATE_CARD_SUCCESS, card: card };
 }
 
+export function createCommentRequest() {
+  return { type: types.CREATE_COMMENT_REQUEST };
+}
+
+export function createCommentSuccess(comment) {
+  return { type: types.CREATE_COMMENT_SUCCESS, comment: comment };
+}
+
+// export function fetchComments() {
+
+// }
+
+// {
+//   "cardId": 9,
+//   "comment": {
+//     "text": "This is my comment"
+//   }
+// }
+
+export function createComment(comment, callback) {
+  return function (dispatch) {
+    dispatch(createCardRequest());
+    apiClient.createComment(comment, (data) => {
+      dispatch(createCommentSuccess(data.comment));
+
+      if (callback) {
+        callback(data.comment);
+      }
+    })
+  }
+}
+
 // export function fetchCards() {
 //   return function (dispatch) {
 //     dispatch(fetchCardsRequest()); // defaults the state

@@ -34,7 +34,7 @@ const createList = (req, res, next) => {
     // const {boardId, list} = req.body
     // {boardId, cards: [], ...list}
 
-    List.create(req.body.card)
+    List.create(req.body)
       .then((newList) => {
         req.list = newList
         next()

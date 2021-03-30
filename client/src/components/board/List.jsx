@@ -70,7 +70,7 @@ const List = ({ listId }) => {
         boardId: list.boardId,
       }
     };
-
+  
     dispatch(CardActions.createCard(newCard, () => {
       setAddCard(!addCard);
       newCardInput.reset();

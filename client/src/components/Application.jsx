@@ -8,7 +8,7 @@ import UISection from "./ui/UISection";
 import AllBoards from "./ui/AllBoards";
 import CardArchived from "./ui/CardArchived";
 import CardEditingDescription from "./ui/CardEditingDescription";
-// import Card from "./ui/Card";
+import UICard from "./ui/Card";
 import CopyCardPopover from "./ui/CopyCardPopover";
 import CreateBoard from "./ui/CreateBoard";
 import DueDatePopover from "./ui/DueDatePopover";
@@ -22,10 +22,10 @@ const Application = () => {
       <TopNav />
       <Route path="/" exact component={BoardsDashboardContainer} />
       <Route path="/boards/:id" exact component={Board} />
-      <Route path="/cards/:id" exact render={props =>
+      <Route path="/cards/:id" exact render={() =>
         <React.Fragment>
-          <Board/>
           <Card/>
+          <Board/>
         </React.Fragment>
       }>
       </Route>
@@ -36,7 +36,7 @@ const Application = () => {
         path="/ui/cardEditingDescription"
         component={CardEditingDescription}
       />
-      <Route path="/ui/card" component={Card} />
+      <Route path="/ui/card" component={UICard} />
       <Route path="/ui/copyCardPopover" component={CopyCardPopover} />
       <Route path="/ui/createBoard" component={CreateBoard} />
       <Route path="/ui/dueDatePopover" component={DueDatePopover} />

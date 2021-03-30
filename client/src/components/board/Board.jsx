@@ -1,28 +1,30 @@
-import React, { useEffect, useReducer } from "react";
+import React, { useEffect } from "react";
+import { useLocation, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
 import * as actions from "../../actions/BoardActions";
 import ExistingLists from './ExistingLists';
 import NewList from './NewList';
-import NewListForm from './NewListForm';
-import Popover from '../shared/Popover';
+// import NewListForm from './NewListForm';
+// import Popover from '../shared/Popover';
 
-const Board = (props) => {
-  const boardId = (() => {
-    let someId = useParams().id;
+const Board = () => {
+  const location = useLocation();
+  const id = useParams().id;
+  let boardId;
+  const card = useSelector(({cards}) => cards).find(({_id}) => _id === id);
 
-    // if ()
-    return someId;
-  })();
+  if (location.pathname.split('/')[1] === 'cards') {
+    boardId = card?.boardId;
+  } else {
+    boardId = id;
+  }
+
   const dispatch = useDispatch();
   const board = useSelector((state) => {
     return state.boards.find((board) => {
       return board._id === boardId;
     });
   });
-
-
-
 
   useEffect(() => {
     if (!boardId) return;
