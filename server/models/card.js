@@ -22,12 +22,22 @@ const CardSchema = new Schema({
     required: [true, "Card Position is required"],
     default: 65535.0
   },
+  archived: {
+    type: Boolean,
+    default: false,
+  },
   comments: [
     {
       type: ObjectId,
-      ref: 'Card'
+      ref: 'Comment',
     }
-  ]
+  ],
+  actions: [
+    {
+      type: ObjectId,
+      ref: 'Action',
+    },
+  ],
   },
   { timestamps: true }
 )

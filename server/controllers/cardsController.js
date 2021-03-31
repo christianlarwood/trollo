@@ -16,6 +16,8 @@ const getCards = (req, res, next) => {
 
 const getCard = (req, res, next) => {
   Card.findById(req.params.id)
+    .populate("comments")
+    .populate("actions")
     .then((card) => {
       res.json({ card });
     })
@@ -24,7 +26,6 @@ const getCard = (req, res, next) => {
 
 const createCard = (req, res, next) => {
   const errors = validationResult(req);
-  console.log(req.body.card);
   if (errors.isEmpty()) {
     Card.create(req.body.card)
       .then((card) => {
@@ -40,6 +41,13 @@ const createCard = (req, res, next) => {
   }
 };
 
+const updateCard = (req, res, next) => {
+  Card.findByIdAndUpdate(req.params.id, req.body.card, { new: true })
+    .then((card) => res.json({ card }))
+    .catch(new HttpError("Comment something something error"));
+}
+
 exports.createCard = createCard;
 exports.getCards = getCards;
 exports.getCard = getCard;
+exports.updateCard = updateCard; 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { createComment } from '../../actions/CardActions';
+import * as actions from '../../actions/CardActions';
 import useInput from '../../hooks/useInput';
 
 const CardComment = ({ cardId }) => {
@@ -14,9 +14,11 @@ const CardComment = ({ cardId }) => {
       comment: {
         text: newCommentInput.value
       }
-    }
-    dispatch(createComment(newComment, () => {
+    };
+
+    dispatch(actions.createComment(newComment, () => {
       newCommentInput.reset();
+      newCommentInput.setValue("");
     }));
   }
 
@@ -34,9 +36,8 @@ const CardComment = ({ cardId }) => {
                 required=""
                 rows="1"
                 placeholder="Write a comment..."
-                value={newCommentInput.value} 
                 {...newCommentInput.bind}
-              ></textarea>
+              />
               <div>
                 <a className="light-button card-icon sm-icon"></a>
                 <a className="light-button smiley-icon sm-icon"></a>
@@ -46,9 +47,10 @@ const CardComment = ({ cardId }) => {
               <div>
                 <input
                   type="submit"
-                  className="button not-implemented"
+                  // className="button not-implemented"
+                  className="button"
                   value="Save"
-                  onSubmit={handleSubmit}
+                  onClick={handleSubmit}
                 />
               </div>
             </label>

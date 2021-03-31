@@ -1,14 +1,14 @@
 import React from 'react';
 
-const ActivityComment = () => {
+const ActivityComment = ({ comment }) => {
   return (
     <li>
       <div className="member-container">
-        <div className="card-member">TP</div>
+        <div className="card-member">AU</div>
       </div>
-      <h3>Taylor Peat</h3>
+      <h3>Anonymous User</h3>
       <div className="comment static-comment">
-        <span>The activities are not functional.</span>
+        <span>{comment.text}</span>
       </div>
       <small>
         22 minutes ago - <span className="link">Edit</span> -{" "}
@@ -16,9 +16,7 @@ const ActivityComment = () => {
       </small>
       <div className="comment">
         <label>
-          <textarea required="" rows="1">
-            The activities have not been implemented yet.
-          </textarea>
+          <textarea required="" rows="1" defaultValue={comment.text}/>
           <div>
             <a className="light-button card-icon sm-icon"></a>
             <a className="light-button smiley-icon sm-icon"></a>

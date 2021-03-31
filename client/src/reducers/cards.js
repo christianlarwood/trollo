@@ -14,17 +14,27 @@ export default function cards(state = [], action) {
       return state.concat(action.card);
     }
     case "CARD_FETCHED": {
-      return state.concat(action.card);
+      if (state.find(card => card._id === action.card._id)) {
+        return state.map(card => card._id === action.card._id ? action.card : card)
+      } else {
+        return state.concat(action.card);
+      }
     }
     case "CREATE_COMMENT_SUCCESS": {
-      let { comment } = action.comment;
-      let cards = [...state];
-      return cards.map(card => {
+      let comment = action.comment;
+      return state.map(card => {
         if (card._id === comment.cardId) {
-          card.comments.concat(comment);
+          const newCard = Object.assign(card);
+          newCard.comments.concat(comment);
+          return newCard;
         }
         return card;
       });
+    }
+    case "UPDATE_CARD_SUCCESS": {
+      const id = action.card._id;
+
+      return state.map(card => card._id === id ? action.card : card);
     }
     default:
       return state;

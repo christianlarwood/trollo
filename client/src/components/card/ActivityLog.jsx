@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ActivityLog = () => {
+const ActivityActions = () => {
   return (
     <>
       <li>
@@ -16,4 +16,4 @@ const ActivityLog = () => {
   )
 }
 
-export default ActivityLog;
+export default ActivityAction;

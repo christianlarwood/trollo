@@ -2,10 +2,12 @@ import React, { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import { useInput } from "../../hooks/useInput";
-import { fetchCard } from "../../actions/CardActions";
+import { fetchCard, updateCard } from "../../actions/CardActions";
 import CardComment from "./CardComments";
 import CardActivity from "./CardActivity";
 import ModalButtons from "./ModalButtons";
+import CardDescription from "./CardDescription";
+
 const Card = ({cardId}) => {
   const dispatch = useDispatch();
   cardId = useParams().id;
@@ -13,12 +15,18 @@ const Card = ({cardId}) => {
   const list = useSelector(state => state.lists).find((list) => list._id === card.listId);
   let cardTitleInput = useInput(card?.title);
   useEffect(() => {
-    if (card) cardTitleInput.setValue(card.title);
+    if (card) return  card.title === cardTitleInput.value || cardTitleInput.setValue(card.title);
 
     dispatch(fetchCard(cardId))
   }, [dispatch, cardId, card]);
 
   const handleTitleChange = () => {
+    const newCard = {
+      card: {
+        title: cardTitleInput.value
+      }
+    }
+    dispatch(updateCard(cardId, newCard));
 
   };
 
@@ -26,6 +34,7 @@ const Card = ({cardId}) => {
     if (event.code === "Enter") {
       event.preventDefault();
       handleTitleChange(event);
+      event.target.blur();
     }
   };
 
@@ -38,7 +47,7 @@ const Card = ({cardId}) => {
         </Link>
         <header>
           <i className="card-icon icon .close-modal"></i>
-          <textarea className="list-title" style={{ height: "45px" }} onKeyPress={handleEnterPress} defaultValue={cardTitleInput.value} {...cardTitleInput.bind} />
+          <textarea className="list-title" style={{ height: "45px" }} onKeyPress={handleEnterPress} defaultValue={cardTitleInput.value} {...cardTitleInput.bind} onBlur={handleTitleChange} />
           <p>
             in list <a className="link">{list?.title}</a>
             <i className="sub-icon sm-icon"></i>
@@ -51,7 +60,7 @@ const Card = ({cardId}) => {
                 <li className="labels-section">
                   <h3>Labels</h3>
                   {
-                    card.labels.map(color => 
+                    card.labels.map(color =>
                         <div key={color} className="member-container">
                           <div className={`${color} label colorblindable`}></div>
                         </div>
@@ -68,29 +77,16 @@ const Card = ({cardId}) => {
                       id="dueDateCheckbox"
                       type="checkbox"
                       className="checkbox"
-                      checked=""
+                      readOnly
                     />
                     Aug 4 at 10:42 AM <span>(past due)</span>
                   </div>
                 </li>
               </ul>
-              <form className="description">
-                <p>Description</p>
-                <span id="description-edit" className="link">
-                  Edit
-                </span>
-                <p className="textarea-overlay">
-                  {card.description}
-                </p>
-                <p id="description-edit-options" className="hidden">
-                  You have unsaved edits on this field.{" "}
-                  <span className="link">View edits</span> -{" "}
-                  <span className="link">Discard</span>
-                </p>
-              </form>
+             <CardDescription cardId={card._id}/>
             </li>
             <CardComment cardId={cardId} />
-            <CardActivity />
+            <CardActivity comments={card.comments} actions={card.actions}/>
           </ul>
         </section>
         <ModalButtons />

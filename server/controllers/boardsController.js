@@ -17,9 +17,14 @@ const getBoard = (req, res, next) => {
       path: "lists",
       populate: {
         path: "cards",
-        populate: {
-          path: "comments"
-        },
+        populate: [
+          {
+            path: "comments",
+          },
+          {
+            path: "actions"
+          }
+        ],
       },
     })
     .then((board) => {

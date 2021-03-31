@@ -31,6 +31,8 @@ router.get("/cards", cardsController.getCards);
 
 router.get("/cards/:id", cardsController.getCard);
 
+router.put("/cards/:id", cardsController.updateCard);
+
 router.post("/cards", validateCard, cardsController.createCard);
 
 router.post("/comments", validateComment, commentsController.createComment);
