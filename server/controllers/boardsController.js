@@ -21,10 +21,10 @@ const getBoard = (req, res, next) => {
           {
             path: "comments",
           },
-          {
-            path: "actions"
-          }
-        ],
+          // {
+          //   path: "actions",
+          // },
+        ]
       },
     })
     .then((board) => {

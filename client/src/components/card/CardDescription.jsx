@@ -23,7 +23,6 @@ const CardDescription = ({ cardId }) => {
     };
 
     dispatch(updateCard(cardId, card, () => {
-      // descriptionInput.reset();
       setEditing(false);
       setAnyDescriptionChanges(false);
     }));

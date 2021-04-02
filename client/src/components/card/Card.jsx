@@ -7,13 +7,18 @@ import CardComment from "./CardComments";
 import CardActivity from "./CardActivity";
 import ModalButtons from "./ModalButtons";
 import CardDescription from "./CardDescription";
+import CardLabels from "./CardLabels";
+import CardDueDate from "./CardDueDate";
 
 const Card = ({cardId}) => {
   const dispatch = useDispatch();
   cardId = useParams().id;
+  
   const card = useSelector(state => state.cards).find((card) => card._id === cardId);
   const list = useSelector(state => state.lists).find((list) => list._id === card.listId);
+  
   let cardTitleInput = useInput(card?.title);
+
   useEffect(() => {
     if (card) return  card.title === cardTitleInput.value || cardTitleInput.setValue(card.title);
 
@@ -45,6 +50,11 @@ const Card = ({cardId}) => {
         <Link to={{ pathname: `/boards/${card.boardId}`, state: { boardId: card.boardId }}} >
           <i className="x-icon icon close-modal"></i>
         </Link>
+        { card?.archived &&
+          <div className="archived-banner">
+            <i className="file-icon icon"></i>This card is archived.
+          </div>
+        }
         <header>
           <i className="card-icon icon .close-modal"></i>
           <textarea className="list-title" style={{ height: "45px" }} onKeyPress={handleEnterPress} defaultValue={cardTitleInput.value} {...cardTitleInput.bind} onBlur={handleTitleChange} />
@@ -57,31 +67,8 @@ const Card = ({cardId}) => {
           <ul className="modal-outer-list">
             <li className="details-section">
               <ul className="modal-details-list">
-                <li className="labels-section">
-                  <h3>Labels</h3>
-                  {
-                    card.labels.map(color =>
-                        <div key={color} className="member-container">
-                          <div className={`${color} label colorblindable`}></div>
-                        </div>
-                      )
-                  }
-                  <div className="member-container">
-                    <i className="plus-icon sm-icon"></i>
-                  </div>
-                </li>
-                <li className="due-date-section">
-                  <h3>Due Date</h3>
-                  <div id="dueDateDisplay" className="overdue completed">
-                    <input
-                      id="dueDateCheckbox"
-                      type="checkbox"
-                      className="checkbox"
-                      readOnly
-                    />
-                    Aug 4 at 10:42 AM <span>(past due)</span>
-                  </div>
-                </li>
+                <CardLabels labels={card.labels}/>
+                <CardDueDate dueDate={card.dueDate}/>
               </ul>
              <CardDescription cardId={card._id}/>
             </li>
@@ -89,7 +76,7 @@ const Card = ({cardId}) => {
             <CardActivity comments={card.comments} actions={card.actions}/>
           </ul>
         </section>
-        <ModalButtons />
+        <ModalButtons cardId={card._id} />
       </div>
     </div>
   );

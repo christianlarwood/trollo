@@ -17,7 +17,6 @@ const getCards = (req, res, next) => {
 const getCard = (req, res, next) => {
   Card.findById(req.params.id)
     .populate("comments")
-    .populate("actions")
     .then((card) => {
       res.json({ card });
     })
