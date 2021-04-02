@@ -1,11 +1,14 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const TopNav = () => (
   <nav>
     <ul>
-      <li className="boards trello-icon icon">
-        <span>Boards</span>
-      </li>
+        <li className="boards trello-icon icon">
+          <Link to={{pathname: '/'}}>
+            <span>Boards</span>
+          </Link>
+        </li>
       <li className="search-container">
         <div className="search search-icon icon"></div>
         <div className="active-search">

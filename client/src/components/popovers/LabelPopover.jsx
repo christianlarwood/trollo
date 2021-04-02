@@ -17,8 +17,6 @@ const LabelsPopover = ({ close }) => {
 
   const LabelPart = ({color}) => {
 
-
-
     const addLabel = () => {
       const card = {
         cardId: cardId,

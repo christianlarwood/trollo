@@ -1,31 +1,66 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useCallback } from "react";
 import Pikaday from "pikaday";
 import moment from "moment";
-import useInput from "../../hooks/useInput";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { updateCard } from "../../actions/CardActions";
 
 const DueDatePopover = ({ close }) => {
   const cardId = useParams().id;
-  const card = useSelector(state => state.cards).find(({_id}) => cardId === _id);
-  const dueDate = useInput(card.dueDate);
+  const card = useSelector(state => state.cards).find(card => card._id === cardId);
+  const dateInput = useRef(null);
+  const calendar = useRef(null);
+  const dispatch = useDispatch();
+  const handleSubmit = useCallback((event) => {
+    event.preventDefault();
+    const newDueDate = {
+      cardId,
+      card: {
+        dueDate: moment(picker.current.getDate(), "M/D/YYYY").toISOString(),
+      },
+    };
+    return newDueDate;
+    // console.log(picker.current.getDate(), newDueDate.card.dueDate);
+  }, [cardId, dispatch])
 
-  const setDueDate = (newDate) => {
-    console.log(newDate);
-    dueDate.current = newDate;
-  }
-
-  let picker;
   useEffect(() => {
-      picker = new Pikaday({
-        field: document.querySelector(".datepicker-select-date input"),
+    dispatch(updateCard(cardId, ))
+  }, []);
+
+  const removeDueDate = (event) => {
+    event.preventDefault();
+    const newDueDate = {
+      cardId,
+      card: {
+        dueDate: null,
+      },
+    };
+
+    const defaultMoment = useCallback(() => {
+      if (props.dueDate) {
+        return moment(props.dueDate);
+      } else {
+        const time = moment().add(1, "day");
+        time.set({
+          hour: 12,
+          minute: 0,
+          second: 0,
+        });
+        return time;
+      }
+    }, [props.dueDate]);
+
+    const defaultDate = useCallback(() => {
+      defaultMoment().toDate();
+    }, [defaultMoment]);
+    useEffect(() => {
+      const picker = new Pikaday({
+        field: dateInput.current,
         bound: false,
-        container: document.getElementById("calendar-widget"),
+        container: calendar.current,
         firstDay: 1,
         yearRange: 10,
-        defaultDate: moment()
-          .add(1, "day")
-          .toDate(),
+        defaultDate: defaultDate(),
         setDefaultDate: true,
         format: "M/D/YYYY",
         i18n: {
@@ -43,7 +78,7 @@ const DueDatePopover = ({ close }) => {
             "September",
             "October",
             "November",
-            "December"
+            "December",
           ],
           weekdays: [
             "Sunday",
@@ -52,102 +87,62 @@ const DueDatePopover = ({ close }) => {
             "Wednesday",
             "Thursday",
             "Friday",
-            "Saturday"
+            "Saturday",
           ],
-          weekdaysShort: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
+          weekdaysShort: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
         },
+        keyboardInput: false,
         toString(date, format) {
           return moment(date).format(format);
-        }
+        },
       });
       picker.show();
-  }, [picker]);
+    }, [defaultDate]);
 
-    return (
-      <>
-        <header>
-          <span>Change due date</span>
-          <a href="#" className="icon-sm icon-close"></a>
-        </header>
-        <div className="content">
-          <form>
-            <div className="datepicker-select">
-              <div className="datepicker-select-date">
-                <label>
-                  Date
-                  <input type="text" placeholder="Enter date" autoFocus {...dueDate.bind}/>
-                </label>
-              </div>
-              <div className="datepicker-select-time">
-                <label>
-                  Time
-                  <input
-                    type="text"
-                    placeholder="Enter time"
-                    value="12:00 PM"
-                  />
-                </label>
-              </div>
-              <div id="calendar-widget"></div>
+
+
+  return (
+    <>
+      <header>
+        <span>Change due date</span>
+        <a href="#" className="icon-sm icon-close" onClick={close}></a>
+      </header>
+      <div className="content">
+        <form>
+          <div className="datepicker-select">
+            <div className="datepicker-select-date">
+              <label>
+                Date
+                <input
+                  type="text"
+                  placeholder="Enter date"
+                  autoFocus
+                  ref={dateInput}
+                />
+              </label>
             </div>
-            <button className="button" type="submit" >
-              Save
-            </button>
-            <button className="button red-button" type="reset">
-              Remove
-            </button>
-          </form>
-        </div>
-      </>
-    );
-  }
+            <div className="datepicker-select-time">
+              <label>
+                Time
+                <input type="text" placeholder="Enter time" value="12:00" readOnly />
+              </label>
+            </div>
+            <div id="calendar-widget" ref={calendar}></div>
+          </div>
+          <button className="button" type="submit" onClick={handleDateChange}>
+            Save
+          </button>
+          <button
+            className="button red-button"
+            type="reset"
+            onClick={removeDueDate}
+          >
+            Remove
+          </button>
+        </form>
+      </div>
+    </>
+  );
+};
 
 export default DueDatePopover;
-
-
-// componentDidMount() {
-  //   this.picker = new Pikaday({
-  //     field: document.querySelector(".datepicker-select-date input"),
-  //     bound: false,
-  //     container: document.getElementById("calendar-widget"),
-  //     firstDay: 1,
-  //     yearRange: 10,
-  //     defaultDate: moment()
-  //       .add(1, "day")
-  //       .toDate(),
-  //     setDefaultDate: true,
-  //     format: "M/D/YYYY",
-  //     i18n: {
-  //       previousMonth: "Prev",
-  //       nextMonth: "Next",
-  //       months: [
-  //         "January",
-  //         "February",
-  //         "March",
-  //         "April",
-  //         "May",
-  //         "June",
-  //         "July",
-  //         "August",
-  //         "September",
-  //         "October",
-  //         "November",
-  //         "December"
-  //       ],
-  //       weekdays: [
-  //         "Sunday",
-  //         "Monday",
-  //         "Tuesday",
-  //         "Wednesday",
-  //         "Thursday",
-  //         "Friday",
-  //         "Saturday"
-  //       ],
-  //       weekdaysShort: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
-  //     },
-  //     toString(date, format) {
-  //       return moment(date).format(format);
-  //     }
-  //   });
-  //   this.picker.show();
-  // }

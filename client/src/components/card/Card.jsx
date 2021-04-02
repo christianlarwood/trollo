@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import { useInput } from "../../hooks/useInput";
-import { fetchCard, updateCard } from "../../actions/CardActions";
+import { fetchCard, updateCard, createComment } from "../../actions/CardActions";
 import CardComment from "./CardComments";
 import CardActivity from "./CardActivity";
 import ModalButtons from "./ModalButtons";
@@ -13,17 +13,22 @@ import CardDueDate from "./CardDueDate";
 const Card = ({cardId}) => {
   const dispatch = useDispatch();
   cardId = useParams().id;
-  
-  const card = useSelector(state => state.cards).find((card) => card._id === cardId);
+
+  let card = useSelector(state => state.cards).find((card) => card._id === cardId);
   const list = useSelector(state => state.lists).find((list) => list._id === card.listId);
-  
+
   let cardTitleInput = useInput(card?.title);
 
   useEffect(() => {
     if (card) return  card.title === cardTitleInput.value || cardTitleInput.setValue(card.title);
-
     dispatch(fetchCard(cardId))
-  }, [dispatch, cardId, card]);
+  }, [dispatch, cardId, card, cardTitleInput]);
+
+  const commentDispatch = (newComment, callback) => {
+    return createComment(newComment, () => {
+      callback();
+    });
+  }
 
   const handleTitleChange = () => {
     const newCard = {
@@ -32,7 +37,6 @@ const Card = ({cardId}) => {
       }
     }
     dispatch(updateCard(cardId, newCard));
-
   };
 
   const handleEnterPress = (event) => {
@@ -45,7 +49,9 @@ const Card = ({cardId}) => {
 
   return !card ? <></> : (
     <div id="modal-container">
-      <div className="screen"></div>
+      <Link to={{ pathname: `/boards/${card.boardId}`, state: { boardId: card.boardId }}} >
+        <div className="screen"></div>
+      </Link>
       <div id="modal">
         <Link to={{ pathname: `/boards/${card.boardId}`, state: { boardId: card.boardId }}} >
           <i className="x-icon icon close-modal"></i>
@@ -56,7 +62,6 @@ const Card = ({cardId}) => {
           </div>
         }
         <header>
-          <i className="card-icon icon .close-modal"></i>
           <textarea className="list-title" style={{ height: "45px" }} onKeyPress={handleEnterPress} defaultValue={cardTitleInput.value} {...cardTitleInput.bind} onBlur={handleTitleChange} />
           <p>
             in list <a className="link">{list?.title}</a>
@@ -72,7 +77,7 @@ const Card = ({cardId}) => {
               </ul>
              <CardDescription cardId={card._id}/>
             </li>
-            <CardComment cardId={cardId} />
+            <CardComment cardId={cardId} commentDispatch={commentDispatch}/>
             <CardActivity comments={card.comments} actions={card.actions}/>
           </ul>
         </section>

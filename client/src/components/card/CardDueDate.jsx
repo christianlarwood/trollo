@@ -9,7 +9,7 @@ const CardDueDate = ({ dueDate }) => {
     setAddDate({ visible: true, attachedTo: event.target });
   }
 
-  // console.log(dueDate);
+  // (dueDate);
   return (
     <li className="due-date-section">
       <h3>Due Date</h3>
@@ -20,7 +20,6 @@ const CardDueDate = ({ dueDate }) => {
           className="checkbox"
           readOnly
         />{dueDate}
-        Aug 4 at 10:42 AM <span>(past due)</span>
       </div>
       <Popover type="due-date" {...addDate}>
         <DatePopover close={() => {setAddDate({visible: false})}} />

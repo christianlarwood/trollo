@@ -1,9 +1,8 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import * as actions from '../../actions/CardActions';
 import useInput from '../../hooks/useInput';
 
-const CardComment = ({ cardId }) => {
+const CardComment = ({ cardId, commentDispatch }) => {
   const dispatch = useDispatch();
   const newCommentInput = useInput();
 
@@ -12,14 +11,16 @@ const CardComment = ({ cardId }) => {
     const newComment = {
       cardId,
       comment: {
+        cardId,
         text: newCommentInput.value
       }
     };
 
-    dispatch(actions.createComment(newComment, () => {
+    dispatch(commentDispatch(newComment, () => {
       newCommentInput.reset();
       newCommentInput.setValue("");
-    }));
+      })
+    );
   }
 
   return (

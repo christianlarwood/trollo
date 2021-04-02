@@ -8,6 +8,7 @@ const CommentSchema = new Schema({
   cardId: {
     type: Schema.Types.ObjectId,
     ref: "Card",
+    required: true,
   }
 },
   { timestamps: true }

@@ -24,9 +24,7 @@ export default function cards(state = [], action) {
       let comment = action.comment;
       return state.map(card => {
         if (card._id === comment.cardId) {
-          const newCard = Object.assign(card);
-          newCard.comments.concat(comment);
-          return newCard;
+          return Object.assign({}, card, {comments: card.comments.concat(action.comment)})
         }
         return card;
       });
