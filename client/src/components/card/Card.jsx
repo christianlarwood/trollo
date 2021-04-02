@@ -1,22 +1,70 @@
-import React from "react";
-import { useSelector } from 'react-redux';
+import React, { useEffect } from "react";
+import { useParams, Link } from "react-router-dom";
+import { useSelector, useDispatch } from 'react-redux';
+import { useInput } from "../../hooks/useInput";
+import { fetchCard, updateCard, createComment } from "../../actions/CardActions";
+import CardComment from "./CardComments";
+import CardActivity from "./CardActivity";
+import ModalButtons from "./ModalButtons";
+import CardDescription from "./CardDescription";
+import CardLabels from "./CardLabels";
+import CardDueDate from "./CardDueDate";
 
 const Card = ({cardId}) => {
-  const card = useSelector(state => state.cards).find((card) => card._id === cardId);
-  console.log(card)
-  return (
+  const dispatch = useDispatch();
+  cardId = useParams().id;
+
+  let card = useSelector(state => state.cards).find((card) => card._id === cardId);
+  const list = useSelector(state => state.lists).find((list) => list._id === card.listId);
+
+  let cardTitleInput = useInput(card?.title);
+
+  useEffect(() => {
+    if (card) return  card.title === cardTitleInput.value || cardTitleInput.setValue(card.title);
+    dispatch(fetchCard(cardId))
+  }, [dispatch, cardId, card, cardTitleInput]);
+
+  const commentDispatch = (newComment, callback) => {
+    return createComment(newComment, () => {
+      callback();
+    });
+  }
+
+  const handleTitleChange = () => {
+    const newCard = {
+      card: {
+        title: cardTitleInput.value
+      }
+    }
+    dispatch(updateCard(cardId, newCard));
+  };
+
+  const handleEnterPress = (event) => {
+    if (event.code === "Enter") {
+      event.preventDefault();
+      handleTitleChange(event);
+      event.target.blur();
+    }
+  };
+
+  return !card ? <></> : (
     <div id="modal-container">
-      <div className="screen"></div>
+      <Link to={{ pathname: `/boards/${card.boardId}`, state: { boardId: card.boardId }}} >
+        <div className="screen"></div>
+      </Link>
       <div id="modal">
-        <i className="x-icon icon close-modal"></i>
+        <Link to={{ pathname: `/boards/${card.boardId}`, state: { boardId: card.boardId }}} >
+          <i className="x-icon icon close-modal"></i>
+        </Link>
+        { card?.archived &&
+          <div className="archived-banner">
+            <i className="file-icon icon"></i>This card is archived.
+          </div>
+        }
         <header>
-          <i className="card-icon icon .close-modal"></i>
-          <textarea className="list-title" style={{ height: "45px" }}>
-            Cards do many cool things. Click on this card to open it and learn
-            more...
-          </textarea>
+          <textarea className="list-title" style={{ height: "45px" }} onKeyPress={handleEnterPress} defaultValue={cardTitleInput.value} {...cardTitleInput.bind} onBlur={handleTitleChange} />
           <p>
-            in list <a className="link">Stuff to try (this is a list)</a>
+            in list <a className="link">{list?.title}</a>
             <i className="sub-icon sm-icon"></i>
           </p>
         </header>
@@ -24,215 +72,16 @@ const Card = ({cardId}) => {
           <ul className="modal-outer-list">
             <li className="details-section">
               <ul className="modal-details-list">
-                <li className="labels-section">
-                  <h3>Labels</h3>
-                  <div className="member-container">
-                    <div className="green label colorblindable"></div>
-                  </div>
-                  <div className="member-container">
-                    <div className="yellow label colorblindable"></div>
-                  </div>
-                  <div className="member-container">
-                    <div className="orange label colorblindable"></div>
-                  </div>
-                  <div className="member-container">
-                    <div className="blue label colorblindable"></div>
-                  </div>
-                  <div className="member-container">
-                    <div className="purple label colorblindable"></div>
-                  </div>
-                  <div className="member-container">
-                    <div className="red label colorblindable"></div>
-                  </div>
-                  <div className="member-container">
-                    <i className="plus-icon sm-icon"></i>
-                  </div>
-                </li>
-                <li className="due-date-section">
-                  <h3>Due Date</h3>
-                  <div id="dueDateDisplay" className="overdue completed">
-                    <input
-                      id="dueDateCheckbox"
-                      type="checkbox"
-                      className="checkbox"
-                      checked=""
-                    />
-                    Aug 4 at 10:42 AM <span>(past due)</span>
-                  </div>
-                </li>
+                <CardLabels labels={card.labels}/>
+                <CardDueDate dueDate={card.dueDate}/>
               </ul>
-              <form className="description">
-                <p>Description</p>
-                <span id="description-edit" className="link">
-                  Edit
-                </span>
-                <p className="textarea-overlay">
-                  Cards have a symbol to indicate if they contain a description.
-                </p>
-                <p id="description-edit-options" className="hidden">
-                  You have unsaved edits on this field.{" "}
-                  <span className="link">View edits</span> -{" "}
-                  <span className="link">Discard</span>
-                </p>
-              </form>
+             <CardDescription cardId={card._id}/>
             </li>
-            <li className="comment-section">
-              <h2 className="comment-icon icon">Add Comment</h2>
-              <div>
-                <div className="member-container">
-                  <div className="card-member">TP</div>
-                </div>
-                <div className="comment">
-                  <label>
-                    <textarea
-                      required=""
-                      rows="1"
-                      placeholder="Write a comment..."
-                    ></textarea>
-                    <div>
-                      <a className="light-button card-icon sm-icon"></a>
-                      <a className="light-button smiley-icon sm-icon"></a>
-                      <a className="light-button email-icon sm-icon"></a>
-                      <a className="light-button attachment-icon sm-icon"></a>
-                    </div>
-                    <div>
-                      <input
-                        type="submit"
-                        className="button not-implemented"
-                        value="Save"
-                      />
-                    </div>
-                  </label>
-                </div>
-              </div>
-            </li>
-            <li className="activity-section">
-              <h2 className="activity-icon icon">Activity</h2>
-              <ul className="horiz-list">
-                <li className="not-implemented">Show Details</li>
-              </ul>
-              <ul className="modal-activity-list">
-                <li>
-                  <div className="member-container">
-                    <div className="card-member">TP</div>
-                  </div>
-                  <h3>Taylor Peat</h3>
-                  <div className="comment static-comment">
-                    <span>The activities are not functional.</span>
-                  </div>
-                  <small>
-                    22 minutes ago - <span className="link">Edit</span> -{" "}
-                    <span className="link">Delete</span>
-                  </small>
-                  <div className="comment">
-                    <label>
-                      <textarea required="" rows="1">
-                        The activities have not been implemented yet.
-                      </textarea>
-                      <div>
-                        <a className="light-button card-icon sm-icon"></a>
-                        <a className="light-button smiley-icon sm-icon"></a>
-                        <a className="light-button email-icon sm-icon"></a>
-                      </div>
-                      <div>
-                        <p>You haven&apos;t typed anything!</p>
-                        <input
-                          type="submit"
-                          className="button not-implemented"
-                          value="Save"
-                        />
-                        <i className="x-icon icon"></i>
-                      </div>
-                    </label>
-                  </div>
-                </li>
-                <li>
-                  <div className="member-container">
-                    <div className="card-member small-size">VR</div>
-                  </div>
-                  <p>
-                    <span className="member-name">Victor Reyes</span> changed the
-                    background of this board <small>yesterday at 4:53 PM</small>
-                  </p>
-                </li>
-                <li className="activity-comment">
-                  <div className="member-container">
-                    <div className="card-member">VR</div>
-                  </div>
-                  <h3>Victor Reyes</h3>
-                  <div className="comment static-comment">
-                    <span>Example of a comment.</span>
-                  </div>
-                  <small>
-                    22 minutes ago - <span className="link">Edit</span> -{" "}
-                    <span className="link">Delete</span>
-                  </small>
-                  <div className="comment">
-                    <label>
-                      <textarea required="" rows="1">
-                        Example of a comment.
-                      </textarea>
-                      <div>
-                        <a className="light-button card-icon sm-icon"></a>
-                        <a className="light-button smiley-icon sm-icon"></a>
-                        <a className="light-button email-icon sm-icon"></a>
-                      </div>
-                      <div>
-                        <p>You haven&apos;t typed anything!</p>
-                        <input
-                          type="submit"
-                          className="button not-implemented"
-                          value="Save"
-                        />
-                        <i className="x-icon icon"></i>
-                      </div>
-                    </label>
-                  </div>
-                </li>
-              </ul>
-            </li>
+            <CardComment cardId={cardId} commentDispatch={commentDispatch}/>
+            <CardActivity comments={card.comments} actions={card.actions}/>
           </ul>
         </section>
-        <aside className="modal-buttons">
-          <h2>Add</h2>
-          <ul>
-            <li className="member-button">
-              <i className="person-icon sm-icon"></i>Members
-            </li>
-            <li className="label-button">
-              <i className="label-icon sm-icon"></i>Labels
-            </li>
-            <li className="checklist-button">
-              <i className="checklist-icon sm-icon"></i>Checklist
-            </li>
-            <li className="date-button not-implemented">
-              <i className="clock-icon sm-icon"></i>Due Date
-            </li>
-            <li className="attachment-button not-implemented">
-              <i className="attachment-icon sm-icon"></i>Attachment
-            </li>
-          </ul>
-          <h2>Actions</h2>
-          <ul>
-            <li className="move-button">
-              <i className="forward-icon sm-icon"></i>Move
-            </li>
-            <li className="copy-button">
-              <i className="card-icon sm-icon"></i>Copy
-            </li>
-            <li className="subscribe-button">
-              <i className="sub-icon sm-icon"></i>Subscribe
-              <i className="check-icon sm-icon"></i>
-            </li>
-            <hr />
-            <li className="archive-button">
-              <i className="file-icon sm-icon "></i>Archive
-            </li>
-          </ul>
-          <ul className="light-list">
-            <li className="not-implemented">Share and more...</li>
-          </ul>
-        </aside>
+        <ModalButtons cardId={card._id} />
       </div>
     </div>
   );

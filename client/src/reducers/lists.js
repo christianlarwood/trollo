@@ -15,7 +15,6 @@ export default function lists(state = [], action) {
       return state.concat(action.list)
     }
     case "UPDATE_LIST_SUCCESS": {
-      // state.filter(list => )
       return state.map((list) => {
         if (list._id === action.newList._id) {
           list = action.newList;

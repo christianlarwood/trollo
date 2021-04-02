@@ -34,7 +34,7 @@ const NewList = ({ boardId }) => {
   return (
     <div id="new-list" className={selected ? "new-list selected" : "new-list"}>
       <span onClick={toggleSelected}>Add a list...</span>
-      <input type="text" placeholder="Add a list..." {...bind} />
+      <input type="text" placeholder="Add a list..." {...bind} autoFocus/>
       <div>
         <input type="submit" className="button" value="Save" onClick={handleClick} />
         <i onClick={toggleSelected}className="x-icon icon"></i>

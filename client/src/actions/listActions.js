@@ -75,7 +75,7 @@ export function fetchList(id) {
     dispatch(fetchListRequest()); // defaults the state
     apiClient.getList(id, (data) => {
       dispatch(listFetched(data.list))
-    
+
     });
   };
 }
@@ -84,7 +84,6 @@ export function createList(list, callback) {
   return function (dispatch) {
     dispatch(createListRequest());
     apiClient.createList(list, (data) => {
-      console.log(data.list)
       dispatch(createListSuccess(data.list));
 
       if (callback) {

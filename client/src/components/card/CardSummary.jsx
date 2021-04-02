@@ -1,10 +1,19 @@
 import React from 'react';
+import { Link } from "react-router-dom";
 import { useSelector } from 'react-redux';
 
 const CardSummary = ({cardId}) => {
   const card = useSelector(state => state.cards).find((card) => card._id === cardId);
 
+  // <Link
+  //     to={{ pathname: `/boards/${props.id}`, state: { boardId: props.id } }}
+  //   >
+  //     <span className="board-title">{props.title}</span>
+  //   </Link>
   return (
+    <Link 
+      to={{ pathname: `/cards/${cardId}`, state: { cardId } }}
+    >
       <div className="card-background">
         <div className="card ">
           <i className="edit-toggle edit-icon sm-icon"></i>
@@ -25,6 +34,7 @@ const CardSummary = ({cardId}) => {
           </div>
         </div>
       </div>
+    </Link>
   )
 }
 

@@ -3,11 +3,12 @@ import { Route } from "react-router-dom";
 import TopNav from "./shared/TopNav";
 import BoardsDashboardContainer from "./dashboard/BoardsDashboardContainer";
 import Board from "./board/Board";
+import Card from "./card/Card";
 import UISection from "./ui/UISection";
 import AllBoards from "./ui/AllBoards";
 import CardArchived from "./ui/CardArchived";
 import CardEditingDescription from "./ui/CardEditingDescription";
-import Card from "./ui/Card";
+import UICard from "./ui/Card";
 import CopyCardPopover from "./ui/CopyCardPopover";
 import CreateBoard from "./ui/CreateBoard";
 import DueDatePopover from "./ui/DueDatePopover";
@@ -21,6 +22,13 @@ const Application = () => {
       <TopNav />
       <Route path="/" exact component={BoardsDashboardContainer} />
       <Route path="/boards/:id" exact component={Board} />
+      <Route path="/cards/:id" exact render={() =>
+        <React.Fragment>
+          <Card/>
+          <Board/>
+        </React.Fragment>
+      }>
+      </Route>
       <Route path="/ui" exact component={UISection} />
       <Route path="/ui/allBoards" component={AllBoards} />
       <Route path="/ui/cardArchived" component={CardArchived} />
@@ -28,7 +36,7 @@ const Application = () => {
         path="/ui/cardEditingDescription"
         component={CardEditingDescription}
       />
-      <Route path="/ui/card" component={Card} />
+      <Route path="/ui/card" component={UICard} />
       <Route path="/ui/copyCardPopover" component={CopyCardPopover} />
       <Route path="/ui/createBoard" component={CreateBoard} />
       <Route path="/ui/dueDatePopover" component={DueDatePopover} />

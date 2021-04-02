@@ -19,8 +19,47 @@ export function createCardRequest() {
 }
 
 export function createCardSuccess(card) {
-
   return { type: types.CREATE_CARD_SUCCESS, card: card };
+}
+
+export function updateCardRequest(card) {
+  return { type: types.UPDATE_CARD_REQUEST, card };
+}
+
+export function updateCardSuccess(card) {
+  return { type: types.UPDATE_CARD_SUCCESS, card };
+}
+
+export function createCommentRequest() {
+  return { type: types.CREATE_COMMENT_REQUEST };
+}
+
+export function createCommentSuccess(comment) {
+  return { type: types.CREATE_COMMENT_SUCCESS, comment: comment };
+}
+
+// export function fetchComments() {
+
+// }
+
+// {
+//   "cardId": 9,
+//   "comment": {
+//     "text": "This is my comment"
+//   }
+// }
+
+export function createComment(comment, callback) {
+  return function (dispatch) {
+    dispatch(createCommentRequest());
+    apiClient.createComment(comment, (data) => {
+      dispatch(createCommentSuccess(data.comment));
+
+      if (callback) {
+        callback(data.comment);
+      }
+    })
+  }
 }
 
 // export function fetchCards() {
@@ -35,7 +74,7 @@ export function fetchCard(id) {
     dispatch(fetchCardRequest()); // defaults the state
     apiClient.getCard(id, (data) => {
       dispatch(cardFetched(data.card))
-    
+
     });
   };
 }
@@ -44,6 +83,19 @@ export function createCard(card, callback) {
     dispatch(createCardRequest());
     apiClient.createCard(card, (data) => {
       dispatch(createCardSuccess(data.card));
+
+      if (callback) {
+        callback(data.card);
+      }
+    });
+  };
+}
+
+export function updateCard(id, card, callback) {
+  return function (dispatch) {
+    dispatch(updateCardRequest());
+    apiClient.updateCard(id, card, (data) => {
+      dispatch(updateCardSuccess(data.card))
 
       if (callback) {
         callback(data.card);

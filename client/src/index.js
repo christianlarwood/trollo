@@ -5,7 +5,7 @@ import { Provider } from "react-redux";
 import store from "./lib/Store";
 import Application from "./components/Application";
 import "./index.scss"
-console.log(store);
+
 document.addEventListener("DOMContentLoaded", () => {
   ReactDOM.render(
     <Provider store={store}>

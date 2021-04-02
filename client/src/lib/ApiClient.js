@@ -70,11 +70,25 @@ const apiClient = {
       .catch(logError);
   },
   createCard: function (card, callback) {
-  return axios
-    .post(routes.CREATE_CARD_URL, card)
-    .then(unwrapData)
-    .then(callback)
-    .catch(logError);
+    return axios
+      .post(routes.CREATE_CARD_URL, card)
+      .then(unwrapData)
+      .then(callback)
+      .catch(logError);
+  },
+  createComment: function (comment, callback) {
+    return axios
+      .post(routes.CREATE_COMMENT_URL, comment)
+      .then(unwrapData)
+      .then(callback)
+      .catch(logError);
+  },
+  updateCard: function (id, card, callback) {
+    return axios
+      .put(routes.UPDATE_CARD_URL + id, card)
+      .then(unwrapData)
+      .then(callback)
+      .catch(logError);
   },
 };
 
